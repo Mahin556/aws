@@ -11,9 +11,15 @@
 * assign user a role
     * go to user --> permission --> create a inline policy --> json --> 
 
+* assign service a role
+    * give right to a service to access other service.
+    * not need to embed a access key and secret access key into the application code in the EC2 or there service.
+    * directly storing access key and secret access key into the EC2 is not a good thing in perspective of security
+
     * **IAM Role**: A set of permissions that can be assumed by users, applications, or services.
     * **AssumeRole**: AWS API action that allows a user or service to assume a role and obtain temporary security credentials.
-    * **Trust Policy**: Defines **who** can assume the role.
+        EC2 can assume the role during instance creation.
+    * **Trust Policy**: Defines **who** can assume the role(EC2--> Which instance). also called trust relations.
     * **Permission Policy**: Defines **what** actions the role can perform once assumed.
 
     To allow a **user to assume a role**, you need:
@@ -66,6 +72,8 @@
     2. AWS checks the **role’s trust policy** to see if this user is allowed.
     3. If allowed, AWS returns **temporary security credentials**.
     4. The user can now perform actions allowed by the **role’s permission policy**.
+
+    * To switch role go to top left and click on switch role.
 
     ## 5️⃣ Notes / Best Practices
     * Keep **trust policies minimal**; only allow specific users or services to assume roles.

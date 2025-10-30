@@ -44,10 +44,14 @@
 ### 🔹 **4. IAM (Identity and Access Management)**
 
 * IAM is how AWS controls **who can access what** in your account.
+* Global service
+* user can work on each region, create EC2 in every region unless Policy not allow to create.
 * Components:
 
   * **Users:** Individual identities with login credentials.
+    * difference from application level users(RDS,EC2)
   * **Groups:** Collection of users with common permissions.
+    *When permissions are copied from an existing user who is part of one or more groups and inherits permissions from those groups, the new user is automatically added to the same groups and inherits the same permissions.
   * **Roles:** Identities assigned to applications or services (no permanent credentials).
   * **Policies:** JSON-based permission rules that define actions users or roles can take.
 * Example:

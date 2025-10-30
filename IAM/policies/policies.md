@@ -214,3 +214,219 @@
 }
 ```
 * Provides monitoring visibility without granting modification rights.
+
+
+---
+* Give basic S3 access
+```json
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Sid": "Statement1",
+			"Effect": "Allow",
+			"Action": [
+				"s3:ListAllMyBuckets",
+				"s3:ListBucket",
+				"s3:ListBucketVersions",
+				"s3:GetBucketAcl",
+				"s3:GetBucketCORS",
+				"s3:GetBucketPolicy",
+				"s3:GetObject",
+				"s3:GetObjectAcl",
+				"s3:CreateBucket",
+				"s3:DeleteBucket",
+				"s3:DeleteObject"
+			],
+			"Resource": [
+				"*"
+			]
+		}
+	]
+}
+```
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject",
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::my-bucket",
+                "arn:aws:s3:::my-bucket/*"
+            ]
+        }
+    ]
+}
+```
+* Full S3 access
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": "s3:*",
+            "Resource": [
+                "arn:aws:s3:::my-bucket",
+                "arn:aws:s3:::my-bucket/*"
+            ]
+        }
+    ]
+}
+```
+---
+* **CloudWatch Logs policy**
+* Useful if your EC2 instance (like an app or agent) needs to send logs to CloudWatch:
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+```
+---
+* **EC2 Describe-only policy**
+* Allows the instance to query AWS about EC2 resources, but not modify anything:
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ec2:DescribeInstances",
+                "ec2:DescribeVolumes",
+                "ec2:DescribeTags"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+```
+---
+* Read/write to a specific S3 bucket
+* Send logs to CloudWatch
+* Describe EC2 instances
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:*"
+            ],
+            "Resource": [
+                "arn:aws:s3:::my-app-bucket",
+                "arn:aws:s3:::my-app-bucket/*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ec2:DescribeInstances"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+```
+* Allow EC2 Instance Creation in Specific Regions Only
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowEC2ActionsInSpecificRegions",
+            "Effect": "Allow",
+            "Action": [
+                "ec2:RunInstances",
+                "ec2:DescribeInstances",
+                "ec2:DescribeImages",
+                "ec2:DescribeInstanceTypes",
+                "ec2:CreateTags"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "StringEquals": {
+                    "aws:RequestedRegion": [
+                        "us-east-1",
+                        "ap-south-1"
+                    ]
+                }
+            }
+        },
+        {
+            "Sid": "DenyEC2ActionsInOtherRegions",
+            "Effect": "Deny",
+            "Action": "ec2:RunInstances",
+            "Resource": "*",
+            "Condition": {
+                "StringNotEquals": {
+                    "aws:RequestedRegion": [
+                        "us-east-1",
+                        "ap-south-1"
+                    ]
+                }
+            }
+        }
+    ]
+}
+```
+* Tag based access control
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowDescribeForVisibility",
+            "Effect": "Allow",
+            "Action": [
+                "ec2:DescribeInstances",
+                "ec2:DescribeTags"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "AllowModifyOnlyTaggedInstances",
+            "Effect": "Allow",
+            "Action": [
+                "ec2:StartInstances",
+                "ec2:StopInstances",
+                "ec2:RebootInstances",
+                "ec2:TerminateInstances",
+                "ec2:ModifyInstanceAttribute"
+            ],
+            "Resource": "arn:aws:ec2:*:*:instance/*",
+            "Condition": {
+                "StringEquals": {
+                    "ec2:ResourceTag/Environment": "Dev"
+                }
+            }
+        }
+    ]
+}
+```

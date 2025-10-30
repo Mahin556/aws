@@ -30,4 +30,6 @@
     - on-front investment
 - **Hybrid cloud:-**
     - private + public
-    - 
+    
+
+https://docs.openstack.org/stein/install/

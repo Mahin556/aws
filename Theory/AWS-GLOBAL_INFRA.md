@@ -23,6 +23,11 @@
 * Each region is **completely independent** and **isolated** from others for **fault tolerance** and **data sovereignty**.
 * Each region contains **multiple Availability Zones (AZs)** for redundancy.
 * AWS currently (as of 2025) has **30+ regions** across the globe and continues to expand.
+* Reduce latency, govt policy, redundency.
+* Each region Connected with highly bandwidth optical cables(aws internal).
+* Each region have diff const of service(save cost,electricit price different).
+* Each region have a Code.
+* Not all services are available on each region.
 
 **Example Regions:**
 
@@ -47,7 +52,10 @@
 * An **Availability Zone** is made up of **one or more discrete data centers** with **redundant power, networking, and connectivity**.
 * They are **physically separate** (different buildings, flood plains, and power grids) but **close enough** (tens of kilometers apart) to provide **low-latency replication**.
 * AZs are connected via **high-speed, private fiber-optic networking**.
-
+* Each rack in datacenter have multiple electricity sources.
+* Each AZ get electricity from different power house, connected with different network.
+* Data transfer happen using very fast optical cable and in encrypted form, good for replication.
+* Each AZ have 50-100KM distance.
 **Purpose:**
 
 * To allow applications to be **highly available and fault-tolerant**.
@@ -91,8 +99,8 @@
 ### 🏠 **5. Local Zones**
 
 * A **Local Zone** is an extension of an AWS Region located **closer to large population centers** or **specific industries**.
-* Local Zones bring **compute, storage, and database services** closer to end-users to reduce **latency** (typically <10ms).
-* They are **connected to a parent region** but host some core services locally (like EC2, ECS, EBS).
+* Local Zones bring **compute, storage, and database services** closer to end-users to reduce **latency** (typically <10ms, single digit).
+* They are **connected to a parent region** but host some core services locally (like EC2, ECS, EBS, EKS, VPC).
 
 **Example:**
 

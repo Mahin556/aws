@@ -1,3 +1,6 @@
+### References:
+- [AWS IAM Identity](https://youtu.be/MDM8AraFgUE?si=GxfxxsoeinM5SLRs)
+
 * Help to securly control access to aws resources.
 * Allow to manage user,roles,group and permission to define who can access and who can not what within your aws environment.
 * **Free and global(every region) service**
@@ -23,6 +26,29 @@
 * IAM Permission --->
     * API action that can or can't be performed
     * represented in IAM policy.
+
+* AWS IAM Policy Limits Summary
+    * **IAM Group Policy Limit:**
+    Each **IAM group** can have up to **10 managed policies** attached.
+
+    * **IAM User Policy Limit:**
+    Each **IAM user** can have up to **20 managed policies** attached directly.
+
+    * **Group Membership:**
+    A user can belong to **up to 10 groups**.
+    → If each group has 10 managed policies, the user can **inherit permissions from up to 100 managed policies** (10 groups × 10 policies).
+
+    * **Inline Policies:**
+
+    * Groups can also have **inline policies** (custom JSON policy documents attached directly to the group).
+    * Inline policies do **not count** toward the 10 managed policy limit.
+    * However, they **do count toward the group’s total policy document size limit** (which is 5120 characters).
+
+    | Entity Type | Max Managed Policies | Inline Policy Limit              | Notes                                               |
+    | ----------- | -------------------- | -------------------------------- | --------------------------------------------------- |
+    | IAM User    | 20                   | 1 per user (size limit applies)  | User also inherits from groups                      |
+    | IAM Group   | 10                   | 1 per group (size limit applies) | Users can be in 10 groups                           |
+    | IAM Role    | 10                   | 1 per role (size limit applies)  | Often used for AWS services or cross-account access |
 
 * IAM account ---> 
     * name

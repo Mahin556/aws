@@ -113,6 +113,7 @@ So, even though Root allows EC2:*, the OU narrows it further.
 * If any higher-level SCP **denies** something (explicit or implicit), lower ones **cannot override** it.
 * **Explicit Deny** in any SCP always wins.
 * If no SCP allows an action anywhere in the chain → that action is denied by default.
+* Even if a higher-level SCP allows, if a lower-level SCP denies, that action is still denied.
 
 ---
 
