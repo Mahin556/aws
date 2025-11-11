@@ -34,10 +34,14 @@
   * IAM
   * All resources.
 * AWS recommends:
-
   * **Enabling MFA (Multi-Factor Authentication)** for root
+  * Not create a `Access key` and `Secret Access key` for root users.
   * **Not using it for daily operations**
   * **Creating IAM users** for regular work
+  * If have access keys ---> Rotate it
+* Target for hacker ---> Can create a Access keys for Bitcoin Mining.
+* Not commit in GitRepo
+
 
 ---
 

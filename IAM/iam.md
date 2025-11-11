@@ -1,5 +1,8 @@
 ### References:
 - [AWS IAM Identity](https://youtu.be/MDM8AraFgUE?si=GxfxxsoeinM5SLRs)
+- [AWS Identity and Access Management (IAM) Basics](https://youtu.be/iF9fs8Rw4Uo?si=s-EKxDSRELOcBcnz)
+
+---
 
 * Help to securly control access to aws resources.
 * Allow to manage user,roles,group and permission to define who can access and who can not what within your aws environment.
