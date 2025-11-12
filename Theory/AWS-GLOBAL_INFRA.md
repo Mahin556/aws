@@ -82,16 +82,15 @@
 
   * CloudFront (Content delivery)
   * Route 53 (DNS)
+  * S3 Transfer Acceleration
   * AWS Global Accelerator (Traffic optimization)
   * AWS Shield & WAF (Security and DDoS protection)
 
 **Purpose:**
-
 * Reduce **latency** for users accessing web applications.
 * Provide **faster content delivery** and **improve user experience**.
 
 **Example:**
-
 * Even if your main app runs in `ap-south-1`, users in Delhi, Singapore, or London can access cached versions of static files via nearby Edge Locations.
 
 ---
