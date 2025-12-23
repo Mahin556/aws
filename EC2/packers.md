@@ -1,0 +1,1 @@
+* https://medium.com/@csarat424/building-a-custom-aws-ami-with-packer-a-journey-into-automation-nirvana-1a8737b528e0
