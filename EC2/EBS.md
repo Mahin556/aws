@@ -1,37 +1,9 @@
 * https://docs.aws.amazon.com/ebs/latest/userguide/ebs-encryption.html
 * https://docs.aws.amazon.com/ebs/latest/userguide/ebs-fast-snapshot-restore.html
 
-# **Create an EBS Volume**
-**Steps:**
-• Go to **EC2 Console → Elastic Block Storage → Volumes**
-• Click **Create Volume**
-• Choose:
-* **Type:** gp2
-* **Size:** 5 GB
-* **AZ:** ap-south-1a (*must match instance AZ*)
-  • Click **Create Volume**
-(Do the same to create another volume in **ap-south-1b** — this is to demonstrate AZ restriction.)
-
 ---
 
-# **Launch EC2 Instance (in Matching AZ)**
-
-• Launch an EC2 instance
-• AMI: **Ubuntu**
-• Instance Type: **t2.micro**
-• Edit Network → Select subnet of **ap-south-1a**
-• Add an extra volume:
-* **Size: 6GB**
-  • Launch instance
-Now, this instance has:
-```
-/dev/xvda → 8GB (root volume)
-6GB → extra attached volume
-```
-
----
-
-# **Verify Attached Volumes**
+### **Verify Attached Volumes**
 Inside the EC2 instance, run:
 ```bash
 lsblk
@@ -44,7 +16,7 @@ xvdb   6G
 
 ---
 
-# **Attach Manually Created EBS Volume**
+### **Attach Manually Created EBS Volume**
 Remember:
 **EBS can attach only if Instance AZ = Volume AZ**
 So attach only the volume created in **ap-south-1a**.
@@ -56,6 +28,7 @@ So attach only the volume created in **ap-south-1a**.
 • Attach
 
 * **Inside the instance:**
+
 ```bash
 lsblk
 ```
@@ -121,34 +94,23 @@ lsblk
 ```
 The 5GB volume disappears.
 
+---
+---
 
 **Real-World Concept: Auto-Mount After Reboot**
 You must add the volume to `/etc/fstab`:
 This is your next task.
 Tell me, and I will give the exact correct entry.
 
+
+---
+---
+
 **Important: What Happens to Data After Detach?**
 ✔ Data stays inside the EBS volume
 ✔ You can attach this volume to ANY EC2 instance in the **same AZ**
 ✔ Your files will appear exactly the same
 This is how AWS provides **persistent storage**.
-
-**Summary Diagram (Easy Memory)**
-```
-Create EBS Volume
-      ↓
-Attach to EC2
-      ↓
-Format (mkfs.ext4)
-      ↓
-Mount to folder
-      ↓
-Store data
-      ↓
-Unmount
-      ↓
-Detach (safe)
-```
 
 **Detaching from EBS**
   * Data will be intect after detach and can mount EBS to other instance.
@@ -159,6 +121,8 @@ Detach (safe)
       ```
       * If it have filesystem don't format it, your data will be lost.
 
+---
+---
 
 ##### **Resizing EBS**
 
@@ -230,6 +194,14 @@ Detach (safe)
   ✔ Attach and use the new smaller one
   This is the real industry **workaround**.
 
+https://docs.aws.amazon.com/ebs/latest/userguide/recognize-expanded-volume-linux.html
+
+---
+---
+
+* IF we modify the EBS volume onw time then we need to wait for 6hours to again modify it.
+
+---
 ---
 
 ### Resize EC2 Root Volume (Increase OS Disk Size)
@@ -472,11 +444,9 @@ Use cluster-aware file systems only.
 * Case 1: You delete the **first** snapshot
       * AWS moves any needed blocks into the next snapshot
       * NO DATA LOSS
-
 * Case 2: You delete **middle snapshot**
       * Only unique blocks inside that snapshot will be copied to the next snapshot
       * NO DATA LOSS
-
 * Case 3: You delete the **latest** snapshot
       * No impact on older snapshots
       * You only lose the newest backup
@@ -505,7 +475,6 @@ AWS Console → EBS → Volumes → Select → Actions → Create Snapshot
 You can also automate snapshots using:
 * AWS Backup
 * Data Lifecycle Manager (DLM)
-
 
 
 **Restoring a Snapshot to Create Volume in any AZ**
@@ -555,40 +524,12 @@ You can also automate snapshots using:
             * You want simpler restore
             * More frequent backups
 
-
-**4. Synthetic Full Snapshot Strategy**
-  * System creates a **virtual full snapshot** combining:
-    * Previous full snapshot
-    * Incremental changes
-  * No need to re-copy full data
-  * Looks like a full backup
-  * Faster and cheaper than traditional full backup
-  * Used when:
-    * You want the speed of incremental + restore simplicity of full snapshot
-
-
-**5. Multi-Region Snapshot Strategy**
-  * Copy snapshot from Region A → Region B
-  * For disaster recovery (DR)
-  * Protects against region failure
-  * Used when:
-    * You need DR setup
-    * You want volume in another region
-    * Application needs high reliability
-
-**6. Cross-AZ Snapshot Strategy**
-  * Snapshot created in Region → volume can be restored in any AZ within that Region
-  * Helps move EBS volumes across AZs
-  * Used when:
-    * Migrating EC2 to another AZ
-    * Balancing load across AZs
-
 ---
 
 #### Automate EBS Volume Backup Using EBS Lifecycle Manager
 • EBS Lifecycle Manager (DLM) helps automate snapshot creation of EBS volumes without manual effort.
 • Ideal for databases, critical applications, and regular backup schedules.
-• **Snapshots support a Recycle Bin**
+• **Snapshots support a Recycle Bin Retention rules**
       * Deleted snapshots can be auto-retained for X number of days.
 
 **🔹 Step 1: Create an EBS Volume**
@@ -672,40 +613,9 @@ Example configuration:
       * Developers or automation scripts accidentally delete resources.
 
 
-* **Creating a Recycle Bin Retention Rule**
-
-  1. Open **Recycle Bin** from AWS console.
-  2. Choose whether the rule applies to:
-     * Snapshots
-     * AMIs
-  3. Choose **Apply to all resources** OR select via **Tags**.
-  4. Set **Retention Period**:
-     * Minimum: **1 day**
-     * Maximum: **1 year**
-     * Example: Many companies use **10 days** retention because:
-       • Issues in applications often appear within 10 days
-       • Allows recovery of older stable backups
-  5. Click **Create Retention Rule**.
-
-
 * **What Happens After Creating the Rule?**
   • Any **newly deleted snapshot or AMI** will move to the Recycle Bin.
   • It will NOT be permanently deleted until the retention period ends.
-
-* **Testing the Recycle Bin**
-To verify the rule:
-  **1. Create a New Snapshot**
-    • Go to **Volumes** → **Create Snapshot**
-    • Give a name and create.
-  **2. Delete the Snapshot**
-    • Select snapshot → **Actions** → **Delete Snapshot**
-  **3. Check the Recycle Bin**
-    • Open **Recycle Bin**
-    • You’ll see the deleted snapshot listed.
-    • Details include:
-      * Date deleted
-      * Original ID
-      * Days remaining before permanent deletion
 
 * **Recovering a Snapshot or AMI**
   • Select the snapshot in Recycle Bin

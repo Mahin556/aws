@@ -233,11 +233,7 @@ Keeping databases and application servers private improves **security**, **perfo
 
 ---
 
-### NAT Gateway
-* required elastic ip
-* region or zonal association
-* should be in public subnet
-* connectivity type --> public,private
+
 
 ---
 
