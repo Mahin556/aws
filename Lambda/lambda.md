@@ -12,6 +12,8 @@
 * `Ephemeral Storate` --> Storage of `/tmp` in lambda, 512MB to 10240MB, used when downloading a data from internet
 * `timeout` --> max 15min, programm must exit within 15min
 * `snapstart` -->
+* can delete the stale resource --> ebs, snapshotsm s3buckets, eks
+* lambda function are event driven so we can trigger them thourh any of cloudwatch, s3, function url, api gatewat, loadbalancer.
 
 ```bash
 Cold Start vs Hot Start in AWS Lambda (Practical, Production-Focused)
